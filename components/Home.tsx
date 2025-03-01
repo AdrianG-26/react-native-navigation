@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Button, FlatList, StyleSheet, Text, View, Image } from "react-native";
+import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native";
 
 const products = [
   { id: 1, name: "Ice Cream Cone", price: 20 },
@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-        <Image source={require("../assets/logo.png")} style={styles.logo}/>
+      <Image source={require("../assets/logo.png")} style={styles.logo} />
       <Text style={styles.title}>Available Products</Text>
       <FlatList
         data={products}
