@@ -1,3 +1,5 @@
+import { Ionicons } from "@expo/vector-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import React from "react";
 import {
   Alert,
@@ -84,26 +86,37 @@ const Home = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
-    Alert.alert("Success", `${product.name} added to cart!`);
+    Alert.alert("Success!", `${product.name} was added to the cart!`);
   };
 
   return (
     <View style={styles.container}>
       <Image source={require("../assets/logo-cover.png")} style={styles.logo} />
       <Text style={styles.title}>Available Products</Text>
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.product}>
-            <Image source={item.image} style={styles.image} />
-            <Text>
-              {item.name} - ₱{item.price}
-            </Text>
-            <Button title="Add to Cart" onPress={() => handleAddToCart(item)} />
-          </View>
-        )}
-      />
+      <View style={styles.listContainer}>
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{ paddingBottom: 300 }}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <View style={styles.product}>
+              <Image source={item.image} style={styles.image} />
+              <View>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productPrice}>₱{item.price}</Text>
+              </View>
+              <FontAwesome6
+                name="cart-plus"
+                size={30}
+                color="#F2E3D6"
+                onPress={() => handleAddToCart(item)}
+                style={styles.cartIcon}
+              />
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -111,43 +124,66 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FAF9F6" },
+  container: { flex: 1, backgroundColor: "#F2E3D6" },
   logo: {
     width: "100%",
     height: 200,
     alignSelf: "center",
     justifyContent: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     elevation: 5,
   },
   title: {
-    fontFamily: "Oswald_700Bold",
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 15,
+    marginBottom: 30,
+    marginTop: 30,
     textAlign: "center",
-    marginTop: 15,
+    color: "#82589A",
+    textShadowColor: "#fff",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
-  itemContainer: {
-    padding: 20,
+  listContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   product: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#82589A",
     padding: 15,
     marginBottom: 10,
-    borderRadius: 8,
+    borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
   },
-  productText: { fontSize: 16 },
-  image: { width: 100, height: 100 },
+  image: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+    borderRadius: 15,
+    borderWidth: 3,
+    borderColor: "#F2E3D6",
+  },
+  productName: {
+    textAlign: "left",
+    marginBottom: 20,
+    fontSize: 23,
+    fontWeight: "bold",
+    color: "#F2E3D6",
+  },
+  productPrice: {
+    textAlign: "left",
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#7BB9B1",
+  },
+  cartIcon: { position: "absolute", right: 20 },
 });

@@ -1,5 +1,5 @@
 import { Oswald_700Bold, useFonts } from "@expo-google-fonts/oswald";
-import { Ionicons } from "@expo/vector-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
@@ -58,7 +58,11 @@ export default function App() {
                     onPress={() => navigation.navigate("Cart")}
                     style={styles.cartIcon}
                   >
-                    <Ionicons name="cart" size={28} color="white" />
+                    <FontAwesome6
+                      name="cart-shopping"
+                      size={22}
+                      color="white"
+                    />
                   </TouchableOpacity>
                 ),
               })}
@@ -78,6 +82,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cartIcon: {
-    marginRight: 15,
+    marginRight: 20,
   },
 });
