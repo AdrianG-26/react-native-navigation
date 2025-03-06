@@ -1,47 +1,55 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { useCart } from "../context/CartContext";
 
-const cartItems = [
-  { id: 1, name: "Product A", price: 10, quantity: 2 },
-  { id: 2, name: "Product B", price: 20, quantity: 1 },
-];
+const Cart = ({ navigation }) => {
+  const { cart, updateQuantity } = useCart();
 
-const Cart = () => {
-  const navigation = useNavigation();
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Cart</Text>
-      {cartItems.length === 0 ? (
+
+      {cart.length === 0 ? (
         <Text style={styles.emptyText}>Your cart is empty</Text>
       ) : (
         <FlatList
-          data={cartItems}
+          data={cart}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.cartItem}>
-              <Text style={styles.itemText}>
-                {item.name} - ${item.price} x {item.quantity}
-              </Text>
+              <Image source={item.image} style={styles.image} />
+              <View style={styles.itemDetails}>
+                <Text style={styles.itemText}>{item.name}</Text>
+                <Text>
+                  ₱{item.price} x {item.quantity}
+                </Text>
+                <Text style={styles.itemTotal}>
+                  ₱{item.price * item.quantity}
+                </Text>
+              </View>
               <View style={styles.buttonGroup}>
-                <Button title="+" onPress={() => {}} />
-                <Button title="-" onPress={() => {}} />
+                <Button title="-" onPress={() => updateQuantity(item.id, -1)} />
+                <Text style={styles.quantity}>{item.quantity}</Text>
+                <Button title="+" onPress={() => updateQuantity(item.id, 1)} />
               </View>
             </View>
           )}
         />
       )}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Proceed to Checkout"
-          onPress={() => navigation.navigate("Checkout")}
-        />
-        <Button
-          title="Back to Home"
-          onPress={() => navigation.navigate("Home")}
-        />
-      </View>
+
+      <Text style={styles.total}>Total: ₱{total}</Text>
+
+      {cart.length > 0 && (
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Proceed to Checkout"
+            onPress={() => navigation.navigate("Checkout")}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -64,7 +72,6 @@ const styles = StyleSheet.create({
   },
   cartItem: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#fff",
     padding: 15,
@@ -76,7 +83,17 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
-  itemText: { fontSize: 16 },
-  buttonGroup: { flexDirection: "row", gap: 10 },
+  image: { width: 50, height: 50, marginRight: 10 },
+  itemDetails: { flex: 1 },
+  itemText: { fontSize: 16, fontWeight: "bold" },
+  itemTotal: { fontSize: 14, fontWeight: "bold", color: "#333" },
+  buttonGroup: { flexDirection: "row", alignItems: "center" },
+  quantity: { marginHorizontal: 10, fontSize: 16 },
+  total: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 10,
+    textAlign: "right",
+  },
   buttonContainer: { marginTop: 20 },
 });
