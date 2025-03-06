@@ -103,7 +103,6 @@ const Home = () => {
             <Button title="Add to Cart" onPress={() => handleAddToCart(item)} />
           </View>
         )}
-        
       />
     </View>
   );
