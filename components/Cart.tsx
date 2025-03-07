@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import { useCart } from "../context/CartContext";
+import Ionicons from "react-native-vector-icons/Ionicons"; 
 
 const Cart = ({ navigation }) => {
-  const { cart, updateQuantity } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -14,40 +15,47 @@ const Cart = ({ navigation }) => {
       {cart.length === 0 ? (
         <Text style={styles.emptyText}>Your cart is empty</Text>
       ) : (
-        <FlatList
-          data={cart}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.cartItem}>
-              <Image source={item.image} style={styles.image} />
-              <View style={styles.itemDetails}>
-                <Text style={styles.itemText}>{item.name}</Text>
-                <Text>
-                  ₱{item.price} x {item.quantity}
-                </Text>
-                <Text style={styles.itemTotal}>
-                  ₱{item.price * item.quantity}
-                </Text>
+        <>
+          <FlatList
+            data={cart}
+            keyExtractor={(item, index) => `${item.id}-${index}`} 
+            renderItem={({ item }) => (
+              <View style={styles.cartItem}>
+                <Image source={item.image} style={styles.image} />
+                <View style={styles.itemDetails}>
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  <Text>₱{item.price} x {item.quantity}</Text>
+                  <Text style={styles.itemTotal}>₱{item.price * item.quantity}</Text>
+                </View>
+                <View style={styles.buttonGroup}>
+                  <TouchableOpacity onPress={() => updateQuantity(item.id, -1)}>
+                    <Ionicons name="remove-circle-outline" size={24} color="red" />
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{item.quantity}</Text>
+                  <TouchableOpacity onPress={() => updateQuantity(item.id, 1)}>
+                    <Ionicons name="add-circle-outline" size={24} color="green" />
+                  </TouchableOpacity>
+                </View>
+                {/* Trash icon for deleting a single item */}
+                <TouchableOpacity onPress={() => removeFromCart(item.id)}>
+                  <Ionicons name="trash-outline" size={24} color="black" />
+                </TouchableOpacity>
               </View>
-              <View style={styles.buttonGroup}>
-                <Button title="-" onPress={() => updateQuantity(item.id, -1)} />
-                <Text style={styles.quantity}>{item.quantity}</Text>
-                <Button title="+" onPress={() => updateQuantity(item.id, 1)} />
-              </View>
-            </View>
-          )}
-        />
-      )}
-
-      <Text style={styles.total}>Total: ₱{total}</Text>
-
-      {cart.length > 0 && (
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Proceed to Checkout"
-            onPress={() => navigation.navigate("Checkout")}
+            )}
           />
-        </View>
+
+          <Text style={styles.total}>Total: ₱{total}</Text>
+
+          <View style={styles.buttonContainer}>
+            {/* Trash button for clearing the entire cart */}
+            <TouchableOpacity style={styles.clearButton} onPress={clearCart}>
+              <Ionicons name="trash-bin-outline" size={24} color="white" />
+              <Text style={styles.clearButtonText}>Clear Cart</Text>
+            </TouchableOpacity>
+
+            <Button title="Proceed to Checkout" onPress={() => navigation.navigate("Checkout")} />
+          </View>
+        </>
       )}
     </View>
   );
@@ -95,4 +103,18 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
   buttonContainer: { marginTop: 20 },
+  clearButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  clearButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
 });
