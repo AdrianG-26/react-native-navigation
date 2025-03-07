@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { useCart } from "../context/CartContext";
@@ -57,7 +56,7 @@ const Cart = ({ navigation }) => {
 export default Cart;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#f8f8f8" },
+  container: { flex: 1, padding: 20, backgroundColor: "#F2E3D6" },
   title: {
     fontSize: 22,
     fontWeight: "bold",
